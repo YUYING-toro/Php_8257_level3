@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body{
+                display: flex;
+                align-content: center;
+                justify-content: center;
+                line-height: 1.5rem;
+                background-image: linear-gradient(#00C2C0, #FFE145);
+                min-height: 940px;
+            }
+            hr{
+                margin: 1.1rem 0;
+            }
+            option {
+                max-width: 200px;
+            }
+            button{
+                padding: 6px;
+            }
+        </style>
+    </head>
+    <body>
+        <form action="DepositCalculator.php" method="post" >
+            <h1> Deposit Caculator </h1>
+            <table>
+                <tr>
+                    <th><label for="amount">Pricipal Amount: </label></th>
+                     <td>
+                    <input type="text" id="amount" name="amount">
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="rate">Interest Rate(%): </label></th>
+                    
+                    <td>
+                        <input type="text" id="rate" name="rate">
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="year"> Years of Depoist:</label></th>
+                    <td>
+                        <select name = "year" id="year">
+                        <option  selected="selected">Select ....</option>
+                        <option value="1" >1</option>
+                        <option value="2" >2</option>
+                        <option value="3" >3</option>
+                        <option value="4" >4</option>
+                        <option value="5" >5</option>
+                        <option value="6" >6</option>
+                        <option value="7" >7</option>
+                        <option value="8" >8</option>
+                        <option value="9" >9</option>
+                        <option value="10" >10</option>
+                        <option value="11" >11</option>
+                        <option value="12" >12</option>
+                        <option value="13" >13</option>
+                        <option value="14" >14</option>
+                        <option value="15" >15</option>
+                        <option value="16" >16</option>
+                        <option value="17" >17</option>
+                        <option value="18" >18</option>
+                        <option value="19" >19</option>
+                        <option value="20" >20</option>
+                    </select>
+                    </td>
+                </tr>
+               
+            </table>
+           
+            <hr>
+            <table>
+                <tr>
+                    <th><label for="name">Name: </label></th>
+                    <td>
+                        <input type="text" id="name" name="name">
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="code">Postal Code: </label></th>
+                    <td>
+                        <input type="text" id="code" name="code">
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="phone">Phone Number:<br> (nnn-nnn-nnnn) </label></th>
+                    <td>
+                        <input type="text" id="phone" name="phone">
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="email">Email Address: </label></th>
+                    <td>
+                        <input type="email" id="email" name="email">
+                    </td>
+                </tr>
+            </table>
+        
+            <hr>
+            <p><b>Prefered Contact Method:   </b>    
+            <input type="radio" id="phone" name="contact" value="callphone">
+            <label for="phone"> Phone</label>
+            <input type="radio" id="email" name="contact" value="callemail">
+            <label for="email"> Email</label>
+            </p> 
+            <p><b>If phone is selected, when can we contact you? (check all applicable)</b>       
+                <br>
+            <input type="checkbox" id="am" name="time[]" value="am">
+            <label for="am"> Morning</label>
+            <input type="checkbox" id="pm" name="time[]" value="pm">
+            <label for="pm"> Afternoon</label>
+            <input type="checkbox" id="night" name="time[]" value="night">
+            <label for="night"> Eevening</label>
+            </p> 
+            <button type="submit" value="Caculate">Caculate</button>
+            <button type="reset">Clear</button>
+        </form>
+    </body>
+</html>
