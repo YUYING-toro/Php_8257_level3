@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+        <style>
+            .error{
+                color: red;
+                margin-left: 1.3rem;
+            }
+        </style>
+    </head>
+    <body>
+        <?php
+        //define variable and function for Amount
+        function FinalValidate(bool $amount, bool $rate , bool $year, bool $name, bool $code, bool $phone, bool $email){
+            // input showError parament is not true
+            if ($amount!= true && $rate != true && $rate != true && $year != true && $name != true && $code != true && $phone != true && $email != true)
+                return true;
+            else {
+                return false;
+            }
+        }
+            $showTable = false;
+            $showFrom = true;
+            $amount = $_POST["amount"];
+            $showErrorAmount = false;  //control html_p reeor
+            function ValidatePrincipal($price) {
+                $ruleAmount = "/[0-9]+/i";
+                if($price == null)
+                {
+                    return  false;
+                }elseif ($price < 0) {
+                    return false;
+                }else {
+                    $cheAmount = preg_match($ruleAmount, $price);   //O STR; 1 NUM               
+                    return $cheAmount;
+                }
+            }
+            
+            $rate = $_POST["rate"];
+            $showErrorRate = false;
+            function ValidateRate($rate) {
+                $ruleRate = "/[0-9]+/i";
+                if($rate == null){
+                    return false;
+                }elseif ($rate < 0) {
+                    return false;
+                }else {
+                    $cheRate = preg_match($ruleRate, $rate);
+                    return $cheRate;    
+                }
+            }
+            $year = $_POST["year"];
+            $showErrorYear = false;
+            function ValidateYear($year) {            
+                if($year == "-1"){ //no option
+                    return false;
+                } else {
+                   return true;
+                }
+            }
+            
+            $name = $_POST["name"];
+            $showErrorName = false;  //control html_p reeor
+            function ValidateName($name) {
+//                $ruleName = "/([A-Z][A-Za-z]\s)+/i";
+                if($name == null)
+                {
+                    return  false;
+                } else {
+                    return true;
+                }
+            }
+            $code = $_POST["code"];
+            $showErrorCode = false;
+            function ValidateCode($code) {
+                $ruleCode = "/[a-zA-Z][0-9][A-Za-z]\s?[0-9][a-zA-Z][0-9]/i"; //accept have/no space
+                if($code == null){
+                    return false;
+                } else {
+                    $cheCode = preg_match($ruleCode, $code);
+                    return $cheCode;    
+                }
+            }
+            $phone = $_POST["phone"];
+            $showErrorPhone = false;
+            function ValidatePhone($phone) {
+                $rulePhone = "/([0-9]+){10}/i";
+                if($phone == null){
+                    return false;
+                } else {
+                    $chePhone = preg_match($rulePhone, $phone);
+                    return $chePhone;    
+                }
+            }
+            $email = $_POST["email"];
+            $showErrorEmail = false;
+            function ValidateEmail($email) {
+                $ruleEmail = "/\b[a-zA-Z0-9_!?#%+=-]+@((([A-Za-z0-9])+)\.)+[a-zA-Z]{2,4}/i";
+                if($email == null){
+                    return false;
+                } else {
+                    $cheEmail = preg_match($ruleEmail, $email);
+                    return $cheEmail;    
+                }
+            }
+            $time = $_POST["time"];
+            $contact=$_POST["contact"]; //radio
+            $type = gettype($contact);
+            if($time != null){ $timeCount = count($time);};
+            $showErrorTime = false;
+            function ValidateTime($contact,$time, $timeCount){
+               if(  $contact == null)   //true 有值  選電話又沒值
+                {
+                   return false;
+                }elseif ( $contact = "callphone" && $time == null) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+
+
+            
+
+            
+            
+            $value='123';  
+            
+            //define before/after send >> do value validate >> TF show error 
+
+            if(isset($_POST["send"]))
+            {
+               //form has been submitted
+               //do validation and database operation and whatever you need
+                $cheAmount = ValidatePrincipal($amount);  // 0 str 1 num
+                if(!$cheAmount)   //!T > have error > show = t
+                    {$showErrorAmount = true;}
+                $cheRate = ValidateRate($rate);
+                if(!$cheRate)
+                    { $showErrorRate = true;}
+               $cheYear =  ValidateYear($year);
+               if(!$cheYear){
+                   $showErrorYear =true;
+               }
+               $cheName = ValidateName($name);
+               if(!$cheName){
+                   $showErrorName =true;
+               }
+               $cheCode = ValidateCode($code);
+               if(!$cheCode){
+                   $showErrorCode =true;
+               }
+               $chePhone = ValidatePhone($phone);
+               if(!$chePhone){
+                   $showErrorPhone =true;
+               }               
+               $cheEmail = ValidateEmail($email);
+               if(!$cheEmail){
+                   $showErrorEmail =true;
+               }
+               $cheTime = ValidateTime($contact,$time,$timeCount);
+               if(!$cheTime){
+                   $showErrorTime =true;
+               }
+               //form has not been submitted
+              //print the form
+               
+//               if( !$cheAmount && !$cheCode && !$cheEmail && !$cheName && !$chePhone && !$cheYear && !$cheRate)
+//               { $showTable = true;}
+               $cheTable = FinalValidate($showErrorAmount, $showErrorRate, $showErrorYear,$showErrorName, $showErrorCode,$showErrorPhone,$showErrorEmail); //no error has to show > true
+               if($cheTable == true){
+                   $showTable =true;  
+                   $showFrom = false;
+               } else {
+                   $showTable =false;  
+                   $showFrom = true;
+               }
+              
+                
+            }
+            
+        ?>
+        <div class="showForm" >
+            <form action="lab3.php" method="post" >
+                <h1> <?php print_r($name)?> Deposit Caculator </h1>
+                <table>
+                    <tr>
+                        <th><label for="amount">Pricipal Amount: </label></th>
+                        <td>
+                            
+                            <input type="text" id="amount" name="amount">
+                            <span class="error errorAmount" ></span>
+                       </td>
+                    </tr> 
+                    <tr>
+                        <th><label for="rate">Interest Rate(%): </label></th>
+                        <td>
+                            <input type="text" id="rate" name="rate">
+                            <span class="error errorRate"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><label for="year"> Years of Depoist:</label></th>
+                        <td>
+                            <select name = "year" id="year">
+                                <option  selected="selected" value="-1">Select ....</option>
+                                <option value="1" >1</option>
+                                <option value="2" >2</option>
+                                <option value="3" >3</option>
+                                <option value="4" >4</option>
+                                <option value="5" >5</option>
+                                <option value="6" >6</option>
+                                <option value="7" >7</option>
+                                <option value="8" >8</option>
+                                <option value="9" >9</option>
+                                <option value="10" >10</option>
+                                <option value="11" >11</option>
+                                <option value="12" >12</option>
+                                <option value="13" >13</option>
+                                <option value="14" >14</option>
+                                <option value="15" >15</option>
+                                <option value="16" >16</option>
+                                <option value="17" >17</option>
+                                <option value="18" >18</option>
+                                <option value="19" >19</option>
+                                <option value="20" >20</option>
+                            </select>
+                            <span class="error errorYear"></span>
+                        </td>
+                    </tr>
+               
+                </table>
+           
+            <hr>
+                <table>
+                    <tr>
+                        <th><label for="name">Name: </label></th>
+                        <td>
+                            <input type="text" id="name" name="name">
+                            <span class="error errorName"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><label for="code">Postal Code: </label></th>
+                        <td>
+                            <input type="text" id="code" name="code">
+                            <span class="error errorCode"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><label for="phone">Phone Number:<br> (nnn-nnn-nnnn) </label></th>
+                        <td>
+                            <input type="text" id="phone" name="phone">
+                            <span class="error errorPhone"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><label for="email">Email Address: </label></th>
+                        <td>
+                            <input type="email" id="email" name="email">
+                            <span class="errorEmail error"></span>
+                        </td>
+                    </tr>
+
+
+                </table>
+            
+            <hr>
+                <p><b>Prefered Contact Method:   </b>    
+                <input type="radio" id="phone" name="contact" value="callphone">
+                <label for="phone"> Phone</label>
+                <input type="radio" id="email" name="contact" value="callemail">
+                <label for="email"> Email</label>
+                </p> 
+                <p><b>If phone is selected, when can we contact you? (check all applicable)</b>   </p>
+                <input type="checkbox" id="am" name="time[]" value="Morning" class="time">
+                    <label for="am"> Morning</label>
+                    <input type="checkbox" id="pm" name="time[]" value="Afternoon" class="time">
+                    <label for="pm"> Afternoon</label>
+                    <input type="checkbox" id="night" name="time[]" value="Evening" class="time">
+                    <label for="night"> Eevening</label>
+               <span class="errorTime error"></span>
+            <br> 
+                <button type="submit" value="send" class="send" name =" send">Caculate</button> 
+                <button type="reset" value="">clear</button>
+        
+            </form>
+        </div>
+        
+<!--show table-->
+    <?php 
+            $time = $_POST["time"];		//checkbox
+            $phone=$_POST["phone"];
+            $email=$_POST["email"];
+            $contact=$_POST["contact"]; //radio
+           function OutputTableRow( $years, $total, $rates ) 
+            {
+                $total = sprintf('%.2f', $total);
+                $rates =sprintf('%.2f', $total*$rates/100);
+            print "<tr><td >$years</td><td>$total</td><td>$rates</td></tr>";
+                $total = sprintf('%.2f', $total+$rates);
+            }
+        if($showTable == true)
+        {
+            if($contact == "callphone"){
+                 echo'<p> Our customer service department will call you tomorrow '. implode(" or ", $time).','.' at'.' '.$phone.'.</p>';
+                    
+            }
+            if($contact == "callemail"){
+                 echo'<p> Our customer service department will contact you '. $email.' tomorrow</p>';
+                    
+            }
+            echo '<p>The following is the result of the calculation:</p>';
+            echo '<table border="1"; style="width: 100%"> <tr> <th>Year</th><th>Principal at Year Start</th><th>Interest for the Year</th></tr>';
+            for ($i=1;$i <= $year; $i++)
+            {
+                OutputTableRow($i, $amount, $rate);
+                $amount += $amount*$rate/100;
+            }
+            echo '</table> ';
+        } else {
+            $showTable = false;
+            
+        }
+?>
+
+        <script type="text/javascript">
+            
+        var showForm="<?php echo $showFrom; ?>";
+        var showErrorAmount = "<?php echo $showErrorAmount; ?>";
+//        var rate = "<?php echo $rate; ?>"; //string
+        //var send = "<?php echo $send; ?>";  //get string value 
+        var showErrorRate="<?php echo $showErrorRate; ?>";
+        var showErrorYear="<?php echo $showErrorYear; ?>";
+        var showErrorName="<?php echo $showErrorName; ?>";
+        var showErrorCode="<?php echo $showErrorCode; ?>";
+        var showErrorPhone="<?php echo $showErrorPhone; ?>";        
+        var showErrorEmail="<?php echo $showErrorEmail; ?>"; 
+        var showErrorTime="<?php echo $showErrorTime; ?>"; 
+
+        
+        var space = "";
+        var errorAmount= "Principal amount must be a numberic "
+        if(showErrorAmount){
+            document.querySelector('.errorAmount').innerText =errorAmount;
+            document.querySelector('#amount').addEventListener("keyup",function(){
+                console.log(showErrorAmount);
+              document.querySelector('.errorAmount').innerText =space;
+//            e.preventDefault();     //一閃 但取無$_POST["rate"];
+                },false);     
+        }
+        //rate
+        var errorRate= "Principal rate must be a numberic ";
+        if(showErrorRate){
+            document.querySelector('.errorRate').innerText = errorRate;
+            document.querySelector('#rate').addEventListener("keyup",function(){
+                document.querySelector('.errorRate').innerText =space;
+                },false); 
+            }
+        var errorYear= "Must select one ";
+        if(showErrorYear){
+            document.querySelector('.errorYear').innerText = errorYear;
+            document.querySelector('#year').addEventListener("change",function(){
+                document.querySelector('.errorYear').innerText =space;
+                },false); 
+            }
+        var errorName= "Name is required ";
+        if(showErrorName){
+            document.querySelector('.errorName').innerText = errorName;
+            document.querySelector('#name').addEventListener("keyup",function(){
+                document.querySelector('.errorName').innerText =space;
+                },false); 
+            }
+        var errorCode= "Incorrect Postal Code ";
+        if(showErrorCode){
+            document.querySelector('.errorCode').innerText = errorCode;
+            document.querySelector('#code').addEventListener("keyup",function(){
+                document.querySelector('.errorCode').innerText =space;
+                },false); 
+            }
+        var errorPhone= "Incorrect Phone number";
+        if(showErrorPhone){
+            document.querySelector('.errorPhone').innerText = errorPhone;
+            document.querySelector('#phone').addEventListener("keyup",function(){
+                document.querySelector('.errorPhone').innerText =space;
+                },false); 
+            }        
+        var errorEmail= "Email is required  and correct form";
+        if(showErrorEmail){
+            document.querySelector('.errorEmail').innerText = errorEmail;
+            document.querySelector('#email').addEventListener("keyup",function(){
+                document.querySelector('.errorEmail').innerText =space;
+                },false); 
+            }
+            
+        var errorEmail= "one time";
+        if(showErrorTime){
+            var checkboxes = document.querySelectorAll(".time");
+            document.querySelector('.errorTime').innerText = errorEmail;
+            
+           checkboxes.forEach(function(checkbox) {
+                checkbox.addEventListener('change', function() {
+                document.querySelector('.errorTime').innerText =space;
+              })
+                },false); 
+            }
+            
+         if(showForm == false){
+              document.querySelector('.showForm').setAttribute('style', 'display: none !important');
+         }else{
+             document.querySelector('.error').setAttribute('style', 'display: inline !important');
+         }
+            
+
+            
+       
+        </script>
+        
+    </body>
+</html>
