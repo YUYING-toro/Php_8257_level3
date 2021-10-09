@@ -6,7 +6,7 @@ and open the template in the editor.
 -->
 <html>
     <head>
-        <title>TODO supply a title</title>
+        <title> title</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
@@ -27,6 +27,9 @@ and open the template in the editor.
             button{
                 padding: 6px;
             }
+            .error{
+                color: red;
+            }
         </style>
     </head>
     <body>
@@ -37,41 +40,43 @@ and open the template in the editor.
                     <th><label for="amount">Pricipal Amount: </label></th>
                      <td>
                     <input type="text" id="amount" name="amount">
+                    <span class="error" id="amountError"></span>
                     </td>
                 </tr>
                 <tr>
                     <th><label for="rate">Interest Rate(%): </label></th>
-                    
                     <td>
                         <input type="text" id="rate" name="rate">
+                        <span class="error" id="rateError"></span>
                     </td>
                 </tr>
                 <tr>
                     <th><label for="year"> Years of Depoist:</label></th>
                     <td>
                         <select name = "year" id="year">
-                        <option  selected="selected">Select ....</option>
-                        <option value="1" >1</option>
-                        <option value="2" >2</option>
-                        <option value="3" >3</option>
-                        <option value="4" >4</option>
-                        <option value="5" >5</option>
-                        <option value="6" >6</option>
-                        <option value="7" >7</option>
-                        <option value="8" >8</option>
-                        <option value="9" >9</option>
-                        <option value="10" >10</option>
-                        <option value="11" >11</option>
-                        <option value="12" >12</option>
-                        <option value="13" >13</option>
-                        <option value="14" >14</option>
-                        <option value="15" >15</option>
-                        <option value="16" >16</option>
-                        <option value="17" >17</option>
-                        <option value="18" >18</option>
-                        <option value="19" >19</option>
-                        <option value="20" >20</option>
-                    </select>
+                            <option  selected="selected">Select ....</option>
+                            <option value="1" >1</option>
+                            <option value="2" >2</option>
+                            <option value="3" >3</option>
+                            <option value="4" >4</option>
+                            <option value="5" >5</option>
+                            <option value="6" >6</option>
+                            <option value="7" >7</option>
+                            <option value="8" >8</option>
+                            <option value="9" >9</option>
+                            <option value="10" >10</option>
+                            <option value="11" >11</option>
+                            <option value="12" >12</option>
+                            <option value="13" >13</option>
+                            <option value="14" >14</option>
+                            <option value="15" >15</option>
+                            <option value="16" >16</option>
+                            <option value="17" >17</option>
+                            <option value="18" >18</option>
+                            <option value="19" >19</option>
+                            <option value="20" >20</option>
+                        </select>
+                        <span class="noYear"></span>
                     </td>
                 </tr>
                
@@ -83,24 +88,28 @@ and open the template in the editor.
                     <th><label for="name">Name: </label></th>
                     <td>
                         <input type="text" id="name" name="name">
+                        <span class="noName"></span>
                     </td>
                 </tr>
                 <tr>
                     <th><label for="code">Postal Code: </label></th>
                     <td>
                         <input type="text" id="code" name="code">
+                        <span class="noCode"></span>
                     </td>
                 </tr>
                 <tr>
                     <th><label for="phone">Phone Number:<br> (nnn-nnn-nnnn) </label></th>
                     <td>
                         <input type="text" id="phone" name="phone">
+                        <span class="noPhone"></span>
                     </td>
                 </tr>
                 <tr>
                     <th><label for="email">Email Address: </label></th>
                     <td>
                         <input type="email" id="email" name="email">
+                        <span class="noEmail"></span>
                     </td>
                 </tr>
             </table>
@@ -114,15 +123,21 @@ and open the template in the editor.
             </p> 
             <p><b>If phone is selected, when can we contact you? (check all applicable)</b>       
                 <br>
-            <input type="checkbox" id="am" name="time[]" value="am">
+            <input type="checkbox" id="am" name="time[]" value="Morning">
             <label for="am"> Morning</label>
-            <input type="checkbox" id="pm" name="time[]" value="pm">
+            <input type="checkbox" id="pm" name="time[]" value="Afternoon">
             <label for="pm"> Afternoon</label>
-            <input type="checkbox" id="night" name="time[]" value="night">
+            <input type="checkbox" id="night" name="time[]" value="Evening">
             <label for="night"> Eevening</label>
             </p> 
-            <button type="submit" value="Caculate">Caculate</button>
+            <button type="submit" value="Caculate" class="submit">Caculate</button>
             <button type="reset">Clear</button>
         </form>
+        <script>
+            
+        </script>
+        <script src="./all.js"></script>
+        <script src="./event.js"></script>
+        
     </body>
 </html>
