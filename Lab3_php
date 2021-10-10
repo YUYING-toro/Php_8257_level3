@@ -2,20 +2,46 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title></title>
+        <title>Lab3 </title>
+        
         <style>
+            body{
+                font-family: sans-serif,-webkit-pictograph;
+                margin:1.5rem auto;
+                line-height: 1.5rem;
+                background-image: linear-gradient(#00C2C0, #FFE145);
+                min-height: 940px;
+                max-width: 880px;
+                /*border: 2px solid red;*/
+            }
+            hr{
+                margin: 1.1rem 0;
+            }
+            option {
+                max-width: 200px;
+            }
+            button{
+                padding: 6px;
+                margin-top: 1.5rem;
+            }
             .error{
                 color: red;
-                margin-left: 1.3rem;
+            }
+            .errorTime{
+                margin-left: 2rem;
+                line-height: 0.8rem;
+            }
+            .cacuTable{
+                text-align: center;
             }
         </style>
     </head>
     <body>
         <?php
         //define variable and function for Amount
-        function FinalValidate(bool $amount, bool $rate , bool $year, bool $name, bool $code, bool $phone, bool $email){
+        function FinalValidate(bool $amount, bool $rate , bool $year, bool $name, bool $code, bool $phone, bool $email, bool $time){
             // input showError parament is not true
-            if ($amount!= true && $rate != true && $rate != true && $year != true && $name != true && $code != true && $phone != true && $email != true)
+            if ($amount!= true && $rate != true && $rate != true && $year != true && $name != true && $code != true && $phone != true && $email != true && $time != true)
                 return true;
             else {
                 return false;
@@ -43,6 +69,7 @@
             function ValidateRate($rate) {
                 $ruleRate = "/[0-9]+/i";
                 if($rate == null){
+                    
                     return false;
                 }elseif ($rate < 0) {
                     return false;
@@ -83,10 +110,11 @@
                     return $cheCode;    
                 }
             }
+            //(nnn-nnn-nnnn)
             $phone = $_POST["phone"];
             $showErrorPhone = false;
             function ValidatePhone($phone) {
-                $rulePhone = "/([0-9]+){10}/i";
+                $rulePhone = "/^(\+?1 ?)?\(?([2-9][0-9]{2})\)?[-. ]?([2-9][0-9]{2})[-. ]?([0-9]{4})$/i";
                 if($phone == null){
                     return false;
                 } else {
@@ -107,26 +135,23 @@
             }
             $time = $_POST["time"];
             $contact=$_POST["contact"]; //radio
-            $type = gettype($contact);
-            if($time != null){ $timeCount = count($time);};
-            $showErrorTime = false;
-            function ValidateTime($contact,$time, $timeCount){
-               if(  $contact == null)   //true 有值  選電話又沒值
-                {
-                   return false;
-                }elseif ( $contact = "callphone" && $time == null) {
-                    return false;
+            function ValidateContact($contact){
+                if($contact == "callemail"){
+                    return true;
                 } else {
+                    false;
+                }
+            }
+            $type = gettype($contact);
+            $timeCount = $time == null? null: count($time);
+            $showErrorTime = false;
+            function ValidateTime($contact,$time){
+               if( $contact = "callphone" && isset ($time) == null) {
+                    return false;
+                }else{
                     return true;
                 }
             }
-
-
-            
-
-            
-            
-            $value='123';  
             
             //define before/after send >> do value validate >> TF show error 
 
@@ -136,13 +161,20 @@
                //do validation and database operation and whatever you need
                 $cheAmount = ValidatePrincipal($amount);  // 0 str 1 num
                 if(!$cheAmount)   //!T > have error > show = t
-                    {$showErrorAmount = true;}
+                    {
+                        $showErrorAmount = true; 
+                        $amount = ""; 
+                    }
                 $cheRate = ValidateRate($rate);
                 if(!$cheRate)
-                    { $showErrorRate = true;}
+                    { 
+                        $showErrorRate = true;
+                        $rate =="";
+                    }
                $cheYear =  ValidateYear($year);
                if(!$cheYear){
                    $showErrorYear =true;
+                   
                }
                $cheName = ValidateName($name);
                if(!$cheName){
@@ -151,53 +183,51 @@
                $cheCode = ValidateCode($code);
                if(!$cheCode){
                    $showErrorCode =true;
+                   $code="";
                }
                $chePhone = ValidatePhone($phone);
                if(!$chePhone){
                    $showErrorPhone =true;
+                   $phone="";
                }               
                $cheEmail = ValidateEmail($email);
                if(!$cheEmail){
                    $showErrorEmail =true;
+                   $email="";
                }
-               $cheTime = ValidateTime($contact,$time,$timeCount);
-               if(!$cheTime){
+               $cheContact = ValidateContact($contact);
+               $cheTime = ValidateTime($contact,$time);
+               if($cheTime == false && $cheContact == false ){
                    $showErrorTime =true;
                }
-               //form has not been submitted
-              //print the form
-               
-//               if( !$cheAmount && !$cheCode && !$cheEmail && !$cheName && !$chePhone && !$cheYear && !$cheRate)
-//               { $showTable = true;}
-               $cheTable = FinalValidate($showErrorAmount, $showErrorRate, $showErrorYear,$showErrorName, $showErrorCode,$showErrorPhone,$showErrorEmail); //no error has to show > true
+               $cheTable = FinalValidate($showErrorAmount, $showErrorRate, $showErrorYear,$showErrorName, $showErrorCode,$showErrorPhone,$showErrorEmail,$showErrorTime); //no error has to show > true
                if($cheTable == true){
                    $showTable =true;  
                    $showFrom = false;
                } else {
                    $showTable =false;  
                    $showFrom = true;
-               }
-              
-                
+               }                          
             }
             
         ?>
-        <div class="showForm" >
+
+        <div class="showForm box" >
             <form action="lab3.php" method="post" >
-                <h1> <?php print_r($name)?> Deposit Caculator </h1>
+                <h3><?php print_r($cheTime) ?> Deposit Caculator </h3>
                 <table>
                     <tr>
                         <th><label for="amount">Pricipal Amount: </label></th>
                         <td>
                             
-                            <input type="text" id="amount" name="amount">
+                            <input type="text" id="amount" name="amount" value="<?php print_r($amount) ?>">
                             <span class="error errorAmount" ></span>
                        </td>
                     </tr> 
                     <tr>
                         <th><label for="rate">Interest Rate(%): </label></th>
                         <td>
-                            <input type="text" id="rate" name="rate">
+                            <input type="text" id="rate" name="rate" value="<?php print_r($rate) ?>">
                             <span class="error errorRate"></span>
                         </td>
                     </tr>
@@ -205,27 +235,27 @@
                         <th><label for="year"> Years of Depoist:</label></th>
                         <td>
                             <select name = "year" id="year">
-                                <option  selected="selected" value="-1">Select ....</option>
-                                <option value="1" >1</option>
-                                <option value="2" >2</option>
-                                <option value="3" >3</option>
-                                <option value="4" >4</option>
-                                <option value="5" >5</option>
-                                <option value="6" >6</option>
-                                <option value="7" >7</option>
-                                <option value="8" >8</option>
-                                <option value="9" >9</option>
-                                <option value="10" >10</option>
-                                <option value="11" >11</option>
-                                <option value="12" >12</option>
-                                <option value="13" >13</option>
-                                <option value="14" >14</option>
-                                <option value="15" >15</option>
-                                <option value="16" >16</option>
-                                <option value="17" >17</option>
-                                <option value="18" >18</option>
-                                <option value="19" >19</option>
-                                <option value="20" >20</option>
+                                <option value="-1">Select ....</option>
+                                <option value="1"  <?php if (isset($year) && $year=="1") echo "selected";?>>1</option>
+                                <option value="2" <?php if (isset($year) && $year=="2") echo "selected";?>>2</option>
+                                <option value="3" <?php if (isset($year) && $year=="3") echo "selected";?>>3</option>
+                                <option value="4" <?php if (isset($year) && $year=="4") echo "selected";?>>4</option>
+                                <option value="5" <?php if (isset($year) && $year=="5") echo "selected";?>>5</option>
+                                <option value="6" <?php if (isset($year) && $year=="6") echo "selected";?> >6</option>
+                                <option value="7" <?php if (isset($year) && $year=="7") echo "selected";?>>7</option>
+                                <option value="8" <?php if (isset($year) && $year=="8") echo "selected";?>>8</option>
+                                <option value="9" <?php if (isset($year) && $year=="9") echo "selected";?> >9</option>
+                                <option value="10" <?php if (isset($year) && $year=="10") echo "selected";?>>10</option>
+                                <option value="11" <?php if (isset($year) && $year=="11") echo "selected";?>>11</option>
+                                <option value="12" <?php if (isset($year) && $year=="12") echo "selected";?>>12</option>
+                                <option value="13" <?php if (isset($year) && $year=="13") echo "selected";?>>13</option>
+                                <option value="14" <?php if (isset($year) && $year=="14") echo "selected";?>>14</option>
+                                <option value="15" <?php if (isset($year) && $year=="15") echo "selected";?>>15</option>
+                                <option value="16" <?php if (isset($year) && $year=="16") echo "selected";?>>16</option>
+                                <option value="17" <?php if (isset($year) && $year=="17") echo "selected";?>>17</option>
+                                <option value="18" <?php if (isset($year) && $year=="18") echo "selected";?>>18</option>
+                                <option value="19" <?php if (isset($year) && $year=="19") echo "selected";?>>19</option>
+                                <option value="20" <?php if (isset($year) && $year=="20") echo "selected";?>>20</option>
                             </select>
                             <span class="error errorYear"></span>
                         </td>
@@ -238,28 +268,28 @@
                     <tr>
                         <th><label for="name">Name: </label></th>
                         <td>
-                            <input type="text" id="name" name="name">
+                            <input type="text" id="name" name="name" value="<?php print_r($name) ?>">
                             <span class="error errorName"></span>
                         </td>
                     </tr>
                     <tr>
                         <th><label for="code">Postal Code: </label></th>
                         <td>
-                            <input type="text" id="code" name="code">
+                            <input type="text" id="code" name="code" value="<?php print_r($code) ?>">
                             <span class="error errorCode"></span>
                         </td>
                     </tr>
                     <tr>
                         <th><label for="phone">Phone Number:<br> (nnn-nnn-nnnn) </label></th>
                         <td>
-                            <input type="text" id="phone" name="phone">
+                            <input type="text" id="phone" name="phone" value="<?php print_r($phone) ?>">
                             <span class="error errorPhone"></span>
                         </td>
                     </tr>
                     <tr>
                         <th><label for="email">Email Address: </label></th>
                         <td>
-                            <input type="email" id="email" name="email">
+                            <input type="text" id="email" name="email" value="<?php print_r($email) ?>">
                             <span class="errorEmail error"></span>
                         </td>
                     </tr>
@@ -269,22 +299,23 @@
             
             <hr>
                 <p><b>Prefered Contact Method:   </b>    
-                <input type="radio" id="phone" name="contact" value="callphone">
+                <input type="radio" id="phone" name="contact" value="callphone" checked>
                 <label for="phone"> Phone</label>
                 <input type="radio" id="email" name="contact" value="callemail">
                 <label for="email"> Email</label>
                 </p> 
                 <p><b>If phone is selected, when can we contact you? (check all applicable)</b>   </p>
+                <span class="errorTime error"></span> <br>
                 <input type="checkbox" id="am" name="time[]" value="Morning" class="time">
-                    <label for="am"> Morning</label>
-                    <input type="checkbox" id="pm" name="time[]" value="Afternoon" class="time">
-                    <label for="pm"> Afternoon</label>
-                    <input type="checkbox" id="night" name="time[]" value="Evening" class="time">
-                    <label for="night"> Eevening</label>
-               <span class="errorTime error"></span>
+                <label for="am"> Morning</label>
+                <input type="checkbox" id="pm" name="time[]" value="Afternoon" class="time">
+                <label for="pm"> Afternoon</label>
+                <input type="checkbox" id="night" name="time[]" value="Evening" class="time">
+                <label for="night"> Eevening</label>
+               
             <br> 
                 <button type="submit" value="send" class="send" name =" send">Caculate</button> 
-                <button type="reset" value="">clear</button>
+                <button type="reset" value="" class="reset" onclick="empty()">clear</button>
         
             </form>
         </div>
@@ -304,6 +335,7 @@
             }
         if($showTable == true)
         {
+            echo '<div class = "box"><h1> Thank you '.$name.',for using our deposit caculator! </h1>';
             if($contact == "callphone"){
                  echo'<p> Our customer service department will call you tomorrow '. implode(" or ", $time).','.' at'.' '.$phone.'.</p>';
                     
@@ -313,13 +345,13 @@
                     
             }
             echo '<p>The following is the result of the calculation:</p>';
-            echo '<table border="1"; style="width: 100%"> <tr> <th>Year</th><th>Principal at Year Start</th><th>Interest for the Year</th></tr>';
+            echo '<table border="1"; style="width: 100%" class="cacuTable"> <tr> <th>Year</th><th>Principal at Year Start</th><th>Interest for the Year</th></tr>';
             for ($i=1;$i <= $year; $i++)
             {
                 OutputTableRow($i, $amount, $rate);
                 $amount += $amount*$rate/100;
             }
-            echo '</table> ';
+            echo '</table> </div>';
         } else {
             $showTable = false;
             
@@ -330,8 +362,6 @@
             
         var showForm="<?php echo $showFrom; ?>";
         var showErrorAmount = "<?php echo $showErrorAmount; ?>";
-//        var rate = "<?php echo $rate; ?>"; //string
-        //var send = "<?php echo $send; ?>";  //get string value 
         var showErrorRate="<?php echo $showErrorRate; ?>";
         var showErrorYear="<?php echo $showErrorYear; ?>";
         var showErrorName="<?php echo $showErrorName; ?>";
@@ -339,7 +369,8 @@
         var showErrorPhone="<?php echo $showErrorPhone; ?>";        
         var showErrorEmail="<?php echo $showErrorEmail; ?>"; 
         var showErrorTime="<?php echo $showErrorTime; ?>"; 
-
+        
+//        document.getElementById('year').value = "<?php echo $_GET['year'];?>";
         
         var space = "";
         var errorAmount= "Principal amount must be a numberic "
@@ -380,7 +411,7 @@
                 document.querySelector('.errorCode').innerText =space;
                 },false); 
             }
-        var errorPhone= "Incorrect Phone number";
+        var errorPhone= "Incorrect Phone number (nnn-nnn-nnnn)";
         if(showErrorPhone){
             document.querySelector('.errorPhone').innerText = errorPhone;
             document.querySelector('#phone').addEventListener("keyup",function(){
@@ -395,7 +426,7 @@
                 },false); 
             }
             
-        var errorEmail= "one time";
+        var errorEmail= "When prefered contact method is phone, you have to slesct one or more contact times";
         if(showErrorTime){
             var checkboxes = document.querySelectorAll(".time");
             document.querySelector('.errorTime').innerText = errorEmail;
@@ -411,10 +442,7 @@
               document.querySelector('.showForm').setAttribute('style', 'display: none !important');
          }else{
              document.querySelector('.error').setAttribute('style', 'display: inline !important');
-         }
-            
-
-            
+         }          
        
         </script>
         
